@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/chatFragment"
+        android:title="@string/broadcast_chat"/>
+    <item
+        android:id="@+id/aboutAppFragment"
+        android:title="@string/about_app"/>
+    <item
+        android:id="@+id/settingsFragment"
+        android:title="@string/Settings"/>
+    <item
+        android:id="@+id/signInFragment"
+        android:title="@string/sign_in"/>
+</menu>

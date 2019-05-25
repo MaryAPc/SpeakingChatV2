@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Speaking Chat</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="broadcast_chat">Чат трансляции</string>
+    <string name="about_app">О приложении</string>
+    <string name="Settings">Настройки</string>
+    <string name="sign_in">Войти</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+</resources>
