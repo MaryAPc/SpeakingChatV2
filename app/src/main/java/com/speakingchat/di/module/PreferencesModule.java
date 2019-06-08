@@ -2,9 +2,8 @@ package com.speakingchat.di.module;
 
 import android.content.Context;
 
+import com.speakingchat.di.annotations.ApplicationScope;
 import com.speakingchat.utils.AppPreferences;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,7 +12,7 @@ import dagger.Provides;
 public class PreferencesModule {
 
 	@Provides
-	@Singleton
+	@ApplicationScope
 	AppPreferences providesAppPreferences(Context context) {
 		return new AppPreferences(context);
 	}

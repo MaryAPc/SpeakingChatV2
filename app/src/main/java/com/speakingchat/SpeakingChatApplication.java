@@ -2,8 +2,8 @@ package com.speakingchat;
 
 import android.app.Application;
 
-import com.speakingchat.di.AppComponent;
-import com.speakingchat.di.DaggerAppComponent;
+import com.speakingchat.di.components.AppComponent;
+import com.speakingchat.di.components.DaggerAppComponent;
 import com.speakingchat.di.module.AppContextModule;
 import com.speakingchat.di.module.PreferencesModule;
 

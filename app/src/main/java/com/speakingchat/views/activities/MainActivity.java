@@ -3,13 +3,17 @@ package com.speakingchat.views.activities;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.navigation.NavigationView;
 import com.speakingchat.R;
 import com.speakingchat.SpeakingChatApplication;
+import com.speakingchat.di.module.GoogleApiClientModule;
 import com.speakingchat.utils.AppPreferences;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -22,15 +26,15 @@ import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    @BindView(R.id.activity_drawer_layout)
+    @BindView(R.id.activity_main_drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    @BindView(R.id.activity_drawer_navigation_view)
+    @BindView(R.id.activity_main_drawer_navigation_view)
     NavigationView mNavigationView;
 
-    @BindView(R.id.activity_toolbar)
+    @BindView(R.id.activity_main_toolbar)
     Toolbar mToolbar;
 
     @Inject
@@ -46,11 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
         SpeakingChatApplication.getAppComponent().inject(this);
 
+
+
         setSupportActionBar(mToolbar);
 
-        mNavController = Navigation.findNavController(this, R.id.activity_app_bar_nav_host_fragment);
+        mNavController = Navigation.findNavController(this, R.id.activity_main_app_bar_nav_host_fragment);
 
         if (!mAppPreferences.isSignedIn()) {
+
+
             NavInflater inflater = mNavController.getNavInflater();
             NavGraph graph = inflater.inflate(R.navigation.nav_graph);
             graph.setStartDestination(R.id.signInFragment);
@@ -59,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(mNavigationView, mNavController);
         NavigationUI.setupActionBarWithNavController(this, mNavController, mDrawerLayout);
+
+
     }
 
     @Override
@@ -80,5 +90,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         mNavController.navigateUp();
         return true;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

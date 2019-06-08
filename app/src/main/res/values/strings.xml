@@ -9,4 +9,6 @@
     <string name="sign_in">Войти</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
+
+    <string name="server_client_id">173175220270-q6neigun665fg3fq7ke6r87p3aepq48k.apps.googleusercontent.com</string>
 </resources>

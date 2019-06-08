@@ -2,7 +2,7 @@ package com.speakingchat.di.module;
 
 import android.content.Context;
 
-import javax.inject.Singleton;
+import com.speakingchat.di.annotations.ApplicationScope;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,7 +16,7 @@ public class AppContextModule {
 	}
 
 	@Provides
-	@Singleton
+	@ApplicationScope
 	Context providesContext() {
 		return context;
 	}
