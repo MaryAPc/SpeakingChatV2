@@ -1,6 +1,7 @@
 package com.speakingchat.views.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -8,7 +9,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.navigation.NavigationView;
 import com.speakingchat.R;
 import com.speakingchat.SpeakingChatApplication;
-import com.speakingchat.di.module.GoogleApiClientModule;
+import com.speakingchat.eventbus.EventType;
+import com.speakingchat.eventbus.RxEventBus;
 import com.speakingchat.utils.AppPreferences;
 
 import javax.inject.Inject;
@@ -25,6 +27,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -40,7 +43,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Inject
     AppPreferences mAppPreferences;
 
+    @Inject
+    RxEventBus mEventBus;
+
     private NavController mNavController;
+    private Subscription mSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +57,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         SpeakingChatApplication.getAppComponent().inject(this);
 
-
-
         setSupportActionBar(mToolbar);
 
         mNavController = Navigation.findNavController(this, R.id.activity_main_app_bar_nav_host_fragment);
 
         if (!mAppPreferences.isSignedIn()) {
-
-
             NavInflater inflater = mNavController.getNavInflater();
             NavGraph graph = inflater.inflate(R.navigation.nav_graph);
             graph.setStartDestination(R.id.signInFragment);
@@ -68,7 +71,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         NavigationUI.setupWithNavController(mNavigationView, mNavController);
         NavigationUI.setupActionBarWithNavController(this, mNavController, mDrawerLayout);
 
+        subscribeEventListener();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSubscription.unsubscribe();
+    }
+
+    private void subscribeEventListener() {
+        mSubscription = mEventBus.toObservable().subscribe(eventType -> {
+            if (eventType == EventType.ON_SIGN_IN) {
+                Log.e("Main Activity", "sign in");
+            }
+        });
     }
 
     @Override
@@ -83,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
     @Override

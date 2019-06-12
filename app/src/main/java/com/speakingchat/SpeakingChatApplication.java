@@ -6,6 +6,8 @@ import com.speakingchat.di.components.AppComponent;
 import com.speakingchat.di.components.DaggerAppComponent;
 import com.speakingchat.di.module.AppContextModule;
 import com.speakingchat.di.module.PreferencesModule;
+import com.speakingchat.di.module.RetrofitModule;
+import com.speakingchat.di.module.RxEventBusModule;
 
 public class SpeakingChatApplication extends Application {
 
@@ -21,6 +23,8 @@ public class SpeakingChatApplication extends Application {
         sAppComponent = DaggerAppComponent.builder()
                 .appContextModule(new AppContextModule(this))
                 .preferencesModule(new PreferencesModule())
+                .retrofitModule(new RetrofitModule())
+                .rxEventBusModule(new RxEventBusModule())
                 .build();
     }
 

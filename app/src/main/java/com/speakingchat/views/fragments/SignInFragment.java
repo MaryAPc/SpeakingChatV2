@@ -16,6 +16,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.speakingchat.R;
 import com.speakingchat.SpeakingChatApplication;
 import com.speakingchat.di.module.GoogleApiClientModule;
+import com.speakingchat.eventbus.EventType;
+import com.speakingchat.eventbus.RxEventBus;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,11 +35,13 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
 
     private GoogleApiClient mApiClient;
     private Unbinder mUnbinder;
+    private RxEventBus mEventBus;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApiClient = SpeakingChatApplication.getAppComponent().createSignInComponent(new GoogleApiClientModule(getActivity(), this)).getGoogleApiClient();
+        mEventBus = SpeakingChatApplication.getAppComponent().getBus();
     }
 
     @Nullable
@@ -90,8 +94,11 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String authCode = acct.getServerAuthCode();
                 Log.e("AUTH", authCode);
+
+                mEventBus.send(EventType.ON_SIGN_IN);
             } else {
                 //TODO обработка неудачного логина
+                Log.e("AUTH", "Error");
             }
         }
     }

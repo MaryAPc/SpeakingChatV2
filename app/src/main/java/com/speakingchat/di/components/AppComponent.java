@@ -6,13 +6,15 @@ import com.speakingchat.di.module.AppContextModule;
 import com.speakingchat.di.module.GoogleApiClientModule;
 import com.speakingchat.di.module.PreferencesModule;
 import com.speakingchat.di.module.RetrofitModule;
+import com.speakingchat.di.module.RxEventBusModule;
+import com.speakingchat.eventbus.RxEventBus;
 import com.speakingchat.views.activities.MainActivity;
 
 import dagger.Component;
 import retrofit2.Retrofit;
 
 @ApplicationScope
-@Component(modules = {AppContextModule.class, PreferencesModule.class, RetrofitModule.class})
+@Component(modules = {AppContextModule.class, PreferencesModule.class, RetrofitModule.class, RxEventBusModule.class})
 public interface AppComponent {
 
 	void inject(MainActivity activity);
@@ -20,4 +22,6 @@ public interface AppComponent {
 	SignInComponent createSignInComponent(GoogleApiClientModule module);
 
 	Retrofit getRetrofit();
+
+	RxEventBus getBus();
 }
