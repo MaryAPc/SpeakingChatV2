@@ -9,10 +9,15 @@ import com.speakingchat.di.module.PreferencesModule;
 import com.speakingchat.di.module.RetrofitModule;
 import com.speakingchat.di.module.RxEventBusModule;
 
+import ru.terrakok.cicerone.Cicerone;
+import ru.terrakok.cicerone.NavigatorHolder;
+import ru.terrakok.cicerone.Router;
+
 public class SpeakingChatApplication extends Application {
 
     private static AppComponent sAppComponent;
     public static SpeakingChatApplication sInstance;
+    private Cicerone<Router> mCicerone;
 
     @Override
     public void onCreate() {
@@ -26,6 +31,8 @@ public class SpeakingChatApplication extends Application {
                 .retrofitModule(new RetrofitModule())
                 .rxEventBusModule(new RxEventBusModule())
                 .build();
+
+        mCicerone = Cicerone.create();
     }
 
     public static SpeakingChatApplication getInstance() {
@@ -34,5 +41,13 @@ public class SpeakingChatApplication extends Application {
 
     public static AppComponent getAppComponent() {
         return sAppComponent;
+    }
+
+    public NavigatorHolder getNavigatorHolder() {
+        return mCicerone.getNavigatorHolder();
+    }
+
+    public Router getRouter() {
+        return mCicerone.getRouter();
     }
 }

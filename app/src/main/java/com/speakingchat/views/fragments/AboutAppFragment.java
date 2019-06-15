@@ -14,6 +14,10 @@ import butterknife.ButterKnife;
 
 public class AboutAppFragment extends Fragment {
 
+    public static AboutAppFragment newInstance() {
+        return new AboutAppFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

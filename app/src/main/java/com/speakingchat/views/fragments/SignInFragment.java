@@ -1,21 +1,15 @@
 package com.speakingchat.views.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.speakingchat.R;
 import com.speakingchat.SpeakingChatApplication;
-import com.speakingchat.di.module.GoogleApiClientModule;
 import com.speakingchat.eventbus.EventType;
 import com.speakingchat.eventbus.RxEventBus;
 
@@ -37,10 +31,14 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
     private Unbinder mUnbinder;
     private RxEventBus mEventBus;
 
+    public static SignInFragment newInstance() {
+        return new SignInFragment();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mApiClient = SpeakingChatApplication.getAppComponent().createSignInComponent(new GoogleApiClientModule(getActivity(), this)).getGoogleApiClient();
+       // mApiClient = SpeakingChatApplication.getAppComponent().createSignInComponent(new GoogleApiClientModule(getActivity(), this)).getGoogleApiClient();
         mEventBus = SpeakingChatApplication.getAppComponent().getBus();
     }
 
@@ -81,27 +79,9 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
     }
 
     private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mApiClient);
-        startActivityForResult(signInIntent, RC_AUTH_CODE);
+       mEventBus.send(EventType.ON_SIGN_IN);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_AUTH_CODE) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                GoogleSignInAccount acct = result.getSignInAccount();
-                String authCode = acct.getServerAuthCode();
-                Log.e("AUTH", authCode);
-
-                mEventBus.send(EventType.ON_SIGN_IN);
-            } else {
-                //TODO обработка неудачного логина
-                Log.e("AUTH", "Error");
-            }
-        }
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

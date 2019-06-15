@@ -9,7 +9,7 @@ import dagger.Subcomponent;
 
 @ActivityScope
 @Subcomponent(modules = {GoogleApiClientModule.class})
-public interface SignInComponent {
+public interface ActivityComponent {
 
     GoogleApiClient getGoogleApiClient();
 

@@ -11,4 +11,5 @@
     <string name="navigation_drawer_close">close</string>
 
     <string name="server_client_id">173175220270-q6neigun665fg3fq7ke6r87p3aepq48k.apps.googleusercontent.com</string>
+    <string name="sign_in_text_hint">Войдите в аккаунт с запущенной трансляцией, чтобы начать слушать сообщения</string>
 </resources>

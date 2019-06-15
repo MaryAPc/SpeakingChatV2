@@ -3,14 +3,18 @@
 
     <item
         android:id="@+id/chatFragment"
-        android:title="@string/broadcast_chat"/>
+        android:title="@string/broadcast_chat"
+        android:checkable="true"/>
     <item
         android:id="@+id/aboutAppFragment"
-        android:title="@string/about_app"/>
+        android:title="@string/about_app"
+        android:checkable="true"/>
     <item
         android:id="@+id/settingsFragment"
-        android:title="@string/Settings"/>
+        android:title="@string/Settings"
+        android:checkable="true"/>
     <item
         android:id="@+id/signInFragment"
-        android:title="@string/sign_in"/>
+        android:title="@string/sign_in"
+        android:checkable="true"/>
 </menu>
