@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.Button;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.navigation.NavigationView;
 import com.speakingchat.R;
@@ -36,7 +40,7 @@ import ru.terrakok.cicerone.NavigatorHolder;
 import ru.terrakok.cicerone.android.support.SupportAppNavigator;
 import rx.Subscription;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener, MainView {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener, MainView, View.OnClickListener {
 
     @BindView(R.id.activity_main_drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -47,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @BindView(R.id.activity_main_toolbar)
     Toolbar mToolbar;
 
+    @BindView(R.id.activity_main_view_stub_sign_in)
+    ViewStub mViewStubSignIn;
+
     @Inject
     AppPreferences mAppPreferences;
 
@@ -55,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Inject
     MainPresenter mPresenter;
+
+    Button mButton;
 
     private static final int RC_AUTH_CODE = 11;
 
@@ -68,7 +77,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         setSupportActionBar(mToolbar);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
+        mNavigationView.setNavigationItemSelectedListener(this);
+
 
         SpeakingChatApplication.getAppComponent().inject(this);
         mApiClient = SpeakingChatApplication.getAppComponent().createSignInComponent(new GoogleApiClientModule(this, this)).getGoogleApiClient();
@@ -77,22 +93,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mNavigatorHolder = SpeakingChatApplication.getInstance().getNavigatorHolder();
 
         mPresenter.attachView(this);
-        setupNavigation();
+        setupContent();
+
 
         subscribeEventListener();
     }
 
-    private void setupNavigation() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.setDrawerListener(toggle);
-        toggle.syncState();
-
+    private void setupContent(){
         if (!mAppPreferences.isSignedIn()) {
-            mPresenter.setupRootSignInScreen();
+            //inflateViewStubSignIn();
+            mPresenter.setupSignInLayout();
         } else {
             mPresenter.setupRootChatScreen();
         }
-        mNavigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -134,11 +147,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 mPresenter.settingsItemClick();
                 break;
             case R.id.signInFragment:
-                mPresenter.signInItemClick();
+                mPresenter.signInClick();
                 break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.viewstub_layout_sign_in_button:
+                mPresenter.signInClick();
+                break;
+        }
     }
 
     private void subscribeEventListener() {
@@ -146,8 +168,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             switch (eventType) {
                 case ON_SIGN_IN:
-                    Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mApiClient);
-                    startActivityForResult(signInIntent, RC_AUTH_CODE);
+
                     break;
                 case ON_SUCCESS_SIGN_IN:
                     Log.e("Main Activity", "sign in");
@@ -205,5 +226,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 mNavigationView.setCheckedItem(R.id.chatFragment);
                 break;
         }
+    }
+
+    @Override
+    public void showSignInActivity() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mApiClient);
+        startActivityForResult(signInIntent, RC_AUTH_CODE);
+    }
+
+    @Override
+    public void inflateViewStubSignIn() {
+        View inflatedSignIn = mViewStubSignIn.inflate();
+        SignInButton signInButton = inflatedSignIn.findViewById(R.id.viewstub_layout_sign_in_button);
+        signInButton.setOnClickListener(this);
     }
 }

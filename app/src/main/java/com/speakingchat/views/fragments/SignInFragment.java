@@ -1,10 +1,15 @@
 package com.speakingchat.views.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -75,6 +80,25 @@ public class SignInFragment extends Fragment implements GoogleApiClient.OnConnec
             case R.id.fragment_signin_button_sign_in:
                 signIn();
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_AUTH_CODE) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                String authCode = acct.getServerAuthCode();
+                Log.e("AUTH", authCode);
+
+                mEventBus.send(EventType.ON_SUCCESS_SIGN_IN);
+            } else {
+                //TODO обработка неудачного логина
+                mEventBus.send(EventType.ON_ERROR_SIGN_IN);
+                Log.e("AUTH", "Error");
+            }
         }
     }
 

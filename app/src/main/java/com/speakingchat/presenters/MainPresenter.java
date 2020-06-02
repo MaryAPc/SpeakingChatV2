@@ -24,6 +24,11 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     }
 
+    public void setupSignInLayout() {
+        getView().inflateViewStubSignIn();
+        getView().setCheckedNavigationItem(Screens.ScreenName.SIGN_IN);
+    }
+
     public void setupRootSignInScreen() {
         mRouter.newRootScreen(new Screens.SignInScreen());
         mNavState = NavState.ROOT_SCREEN;
@@ -54,10 +59,8 @@ public class MainPresenter extends BasePresenter<MainView> {
         getView().setCheckedNavigationItem(Screens.ScreenName.SETTINGS);
     }
 
-    public void signInItemClick() {
-        mRouter.navigateTo(new Screens.SignInScreen());
-        mNavState = NavState.NAVIGATED;
-        getView().setCheckedNavigationItem(Screens.ScreenName.SIGN_IN);
+    public void signInClick() {
+        getView().showSignInActivity();
     }
 
     public void backPressed() {
