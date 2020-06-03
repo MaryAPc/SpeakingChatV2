@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Speaking Chat</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="broadcast_chat">Чат трансляции</string>
+    <string name="about_app">О приложении</string>
+    <string name="Settings">Настройки</string>
+    <string name="sign_in">Войти</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+
+    <string name="server_client_id">173175220270-q6neigun665fg3fq7ke6r87p3aepq48k.apps.googleusercontent.com</string>
+    <string name="sign_in_text_hint">Войдите в аккаунт с запущенной трансляцией, чтобы начать слушать сообщения</string>
+</resources>
